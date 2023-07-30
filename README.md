@@ -1,6 +1,6 @@
 # WorkoutTracker
 
-The Workout Tracker is a simple and intuitive application that allows users to track their exercises and scores. With this app,
+The Workout Tracker is a simple and intuitive android application that allows users to track their exercises and scores. With this app,
 you can easily add new exercises, record scores for each exercise, and delete exercises or scores as needed. Whether you are a fitness enthusiast,
 an athlete, or just someone trying to stay active, this tool will help you keep track of your progress and reach your fitness goals.
 
