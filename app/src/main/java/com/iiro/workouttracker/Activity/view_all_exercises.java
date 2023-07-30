@@ -37,7 +37,7 @@ public class view_all_exercises extends AppCompatActivity {
     private RecyclerView recycler;
     private ArrayList<Exercise> all, favourites;
     private ExerciseAdapter adapter;
-    private TextView txt_latest, txt_first, txt_empty;
+    private TextView txt_latest, txt_first, txt_empty, txt_confirm;
     private Button btn_filters;
     private RadioGroup radioGroup;
     private String currentCategory;
@@ -118,7 +118,7 @@ public class view_all_exercises extends AppCompatActivity {
         exerciseAdapter(all);
     }
 
-    public void showPopup(View v) {
+    public void showPopup(View v, int position) {
         PopupMenu popup = new PopupMenu(this, v);
         MenuInflater inflater = popup.getMenuInflater();
         inflater.inflate(R.menu.popup_menu, popup.getMenu());
@@ -128,7 +128,7 @@ public class view_all_exercises extends AppCompatActivity {
             public boolean onMenuItemClick(MenuItem item) {
                 // Handle the click actions for each menu item
                 if (item.getItemId() == R.id.menu_delete) {
-                    Toast.makeText(view_all_exercises.this, "Clicked delete", Toast.LENGTH_SHORT).show();
+                    deleteExercise(position);
                     return true;
                 }
                 return false;
@@ -136,6 +136,38 @@ public class view_all_exercises extends AppCompatActivity {
         });
 
         popup.show();
+    }
+    private void deleteExercise(int position){
+        AlertDialog.Builder builder = new AlertDialog.Builder(view_all_exercises.this);
+        LayoutInflater inflater = (LayoutInflater) view_all_exercises.this.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        View viewInput = inflater.inflate(R.layout.delete_exercise, null, false);
+        builder.setView(viewInput);
+        builder.setTitle("Confirm action");
+
+        txt_confirm = viewInput.findViewById(R.id.txt_confirm);
+
+        Exercise exercise = new ExerciseHandler(this).readSingleExercise(all.get(position).getId());
+
+        txt_confirm.setText("Are you sure you want to delete " + exercise.getName() + " along with all of its scores? This cannot be undone.");
+
+        builder.setPositiveButton("Delete", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                new ExerciseHandler(view_all_exercises.this).delete(exercise.getId());
+                Toast.makeText(view_all_exercises.this, exercise.getName() + " deleted", Toast.LENGTH_SHORT).show();
+
+                loadExercises();
+            }
+        });
+
+        builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+            }
+        });
+
+        AlertDialog dialog = builder.create();
+        dialog.show();
     }
     public void exerciseAdapter(ArrayList<Exercise> all){
         adapter = new ExerciseAdapter(all, this, new ExerciseAdapter.ItemClicked() {
@@ -173,7 +205,7 @@ public class view_all_exercises extends AppCompatActivity {
 
             @Override
             public void showMenu(int position, View view) {
-                showPopup(view);
+                showPopup(view, position);
             }
         });
 
