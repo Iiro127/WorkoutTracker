@@ -118,7 +118,7 @@ public class view_all_exercises extends AppCompatActivity {
         exerciseAdapter(all);
     }
 
-    public void showPopup(View v, int position) {
+    public void showPopup(View v, int position, ArrayList<Exercise> list) {
         PopupMenu popup = new PopupMenu(this, v);
         MenuInflater inflater = popup.getMenuInflater();
         inflater.inflate(R.menu.popup_menu, popup.getMenu());
@@ -128,16 +128,15 @@ public class view_all_exercises extends AppCompatActivity {
             public boolean onMenuItemClick(MenuItem item) {
                 // Handle the click actions for each menu item
                 if (item.getItemId() == R.id.menu_delete) {
-                    deleteExercise(position);
+                    deleteExercise(position, list);
                     return true;
                 }
                 return false;
             }
         });
-
         popup.show();
     }
-    private void deleteExercise(int position){
+    private void deleteExercise(int position, ArrayList<Exercise> list){
         AlertDialog.Builder builder = new AlertDialog.Builder(view_all_exercises.this);
         LayoutInflater inflater = (LayoutInflater) view_all_exercises.this.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         View viewInput = inflater.inflate(R.layout.delete_exercise, null, false);
@@ -146,7 +145,7 @@ public class view_all_exercises extends AppCompatActivity {
 
         txt_confirm = viewInput.findViewById(R.id.txt_confirm);
 
-        Exercise exercise = new ExerciseHandler(this).readSingleExercise(all.get(position).getId());
+        Exercise exercise = new ExerciseHandler(this).readSingleExercise(list.get(position).getId());
 
         txt_confirm.setText("Are you sure you want to delete " + exercise.getName() + " along with all of its scores? This cannot be undone.");
 
@@ -205,7 +204,7 @@ public class view_all_exercises extends AppCompatActivity {
 
             @Override
             public void showMenu(int position, View view) {
-                showPopup(view, position);
+                showPopup(view, position, all);
             }
         });
 
