@@ -1,7 +1,9 @@
 package com.iiro.workouttracker.Activity;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -52,6 +54,23 @@ public class view_scores extends AppCompatActivity {
 
         recycler.setLayoutManager(new LinearLayoutManager(view_scores.this));
 
+        ItemTouchHelper.SimpleCallback itemTouchCallBack = new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT) {
+            @Override
+            public boolean onMove(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder, @NonNull RecyclerView.ViewHolder target) {
+                return false;
+            }
+
+            @Override
+            public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
+                new ScoreHandler(view_scores.this).delete(scores.get(viewHolder.getAdapterPosition()).getId());
+                scores.remove(viewHolder.getAdapterPosition());
+                Toast.makeText(view_scores.this, "Score deleted", Toast.LENGTH_SHORT).show();
+                loadScores();
+            }
+        };
+
+        ItemTouchHelper itemTouchHelper = new ItemTouchHelper(itemTouchCallBack);
+        itemTouchHelper.attachToRecyclerView(recycler);
 
         btn_add.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -61,6 +80,7 @@ public class view_scores extends AppCompatActivity {
         });
 
         txt_name.setText(intent.getStringExtra("name"));
+
 
         loadScores();
     }
