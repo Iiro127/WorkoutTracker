@@ -12,6 +12,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageButton;
@@ -31,7 +32,7 @@ import java.util.ArrayList;
 // intent homma jäi kesken
 public class MainActivity extends AppCompatActivity {
     private RecyclerView recycler_latest, recycler_favourites;
-    private TextView txt_emptyLatest, txt_emptyFavourites, txt_latestLogs;
+    private TextView txt_emptyLatest, txt_emptyFavourites, txt_latestLogs, txt_confirm;
     private EditText edt_name;
     private ImageButton btn_new;
     private RadioGroup radioGroup;
@@ -127,6 +128,39 @@ public class MainActivity extends AppCompatActivity {
         dialog.show();
     }
 
+    private void deleteExercise(int position){
+        AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
+        LayoutInflater inflater = (LayoutInflater) MainActivity.this.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        View viewInput = inflater.inflate(R.layout.delete_exercise, null, false);
+        builder.setView(viewInput);
+        builder.setTitle("Confirm action");
+
+        txt_confirm = viewInput.findViewById(R.id.txt_confirm);
+
+        Exercise exercise = new ExerciseHandler(this).readSingleExercise(all.get(position).getId());
+
+        txt_confirm.setText("Are you sure you want to delete " + exercise.getName() + " along with all of its scores? This cannot be undone.");
+
+        builder.setPositiveButton("Delete", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                new ExerciseHandler(MainActivity.this).delete(exercise.getId());
+                Toast.makeText(MainActivity.this, exercise.getName() + " deleted", Toast.LENGTH_SHORT).show();
+
+                loadExercises();
+            }
+        });
+
+        builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+            }
+        });
+
+        AlertDialog dialog = builder.create();
+        dialog.show();
+    }
+
     public ArrayList<Exercise> readAll(){
         ArrayList<Exercise> exercises1 = new ExerciseHandler(MainActivity.this).readAll();
         return exercises1;
@@ -137,10 +171,22 @@ public class MainActivity extends AppCompatActivity {
         return exercises1;
     }
 
-    public void showPopup(View v) {
+    public void showPopup(View v, int position) {
         PopupMenu popup = new PopupMenu(this, v);
         MenuInflater inflater = popup.getMenuInflater();
         inflater.inflate(R.menu.popup_menu, popup.getMenu());
+
+        popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem item) {
+                // Handle the click actions for each menu item
+                if (item.getItemId() == R.id.menu_delete) {
+                    deleteExercise(position);
+                    return true;
+                }
+                return false;
+            }
+        });
         popup.show();
     }
 
@@ -170,7 +216,7 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public void showMenu(int position, View view) {
-                showPopup(view);
+                showPopup(view, position);
             }
         });
 
