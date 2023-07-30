@@ -24,5 +24,5 @@ an athlete, or just someone trying to stay active, this tool will help you keep 
 * Programming: Java, XML
 * Database: SQLite
 
-# Summary
+# Other remarks
 Please keep in mind this is a learning project. 
