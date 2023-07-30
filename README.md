@@ -16,7 +16,7 @@ an athlete, or just someone trying to stay active, this tool will help you keep 
 * __Logging a score:__ Tap on the icon on the bottom left of an exercise. Once a new screen has appeared, tap on "add score". Fill in the requested information and click "add".
 * __Adding an exercise to favourites:__ Tap on the heart-icon on an exercise.
 * __Seeing all exercises:__ Tap on "Latest logs" on the home page.
-* __Deleting an exercise:__ Tap on the menu-icon on the top right of an exercise. Select "delete" in the menu that pops up, and confirm. (work in progress)
+* __Deleting an exercise:__ Tap on the menu-icon on the top right of an exercise. Select "delete" in the menu that pops up, and confirm.
 * __Deleting a score:__ Tap on the icon on the bottom left of an exercise to see scores. Swipe left or right on the score you want to delete. (work in progress)
 * __Seeing statistics on an exercise:__ Tap on "Latest logs" on the home page. Tap on an exercise to see statistics.
 
