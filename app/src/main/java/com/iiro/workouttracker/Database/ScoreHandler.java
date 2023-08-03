@@ -35,6 +35,7 @@ public class ScoreHandler extends ScoreDatabaseHelper{
         return success;
     }
 
+
     public ArrayList<Score> readAllForExercise(String exerciseName){
         ArrayList<Score> scores = new ArrayList<>();
 
@@ -119,6 +120,14 @@ public class ScoreHandler extends ScoreDatabaseHelper{
         }
 
         return scores.get(0);
+    }
+
+    public boolean deleteAll(String name){
+        SQLiteDatabase db = this.getWritableDatabase();
+        boolean success = db.delete("Scores", "name='" + name + "'", null) > 0;
+        db.close();
+
+        return success;
     }
 
     public boolean delete(int id){

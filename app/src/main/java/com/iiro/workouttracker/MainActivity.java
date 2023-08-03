@@ -28,6 +28,7 @@ import com.iiro.workouttracker.Activity.view_all_exercises;
 import com.iiro.workouttracker.Activity.view_scores;
 import com.iiro.workouttracker.Database.ExerciseAdapter;
 import com.iiro.workouttracker.Database.ExerciseHandler;
+import com.iiro.workouttracker.Database.ScoreHandler;
 import com.iiro.workouttracker.Objects.Exercise;
 
 import java.util.ArrayList;
@@ -147,6 +148,8 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
                 new ExerciseHandler(MainActivity.this).delete(exercise.getId());
+                new ScoreHandler(MainActivity.this).deleteAll(exercise.getName());
+
                 Toast.makeText(MainActivity.this, exercise.getName() + " deleted", Toast.LENGTH_SHORT).show();
 
                 loadExercises();
@@ -206,6 +209,12 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void favClick(int position, View view) {
                 Exercise exercise = new ExerciseHandler(MainActivity.this).readSingleExercise(all.get(position).getId());
+
+                if (favourites.size() >= 3 && !new ExerciseHandler(MainActivity.this).isFavourite(exercise)){
+                    Toast.makeText(MainActivity.this, "You can only have three favourites", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+
                 new ExerciseHandler(MainActivity.this).changeFavourite(exercise);
 
                 loadExercises();
